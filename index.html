@@ -11,11 +11,10 @@ header { background:#0f2a1a; color:white; padding:15px 20px; display:flex; justi
 header h1 { font-size:24px; }
 header h1 span { color:#d4af37; }
 nav a { color:white; text-decoration:none; margin-left:18px; font-size:14px; }
-.hero { background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200'); background-size:cover; background-position:center; height:520px; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; color:white; padding:20px; }
+.hero { background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200'); background-size:cover; background-position:center; height:480px; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; color:white; padding:20px; }
 .hero h2 { font-size:38px; margin-bottom:10px; }
 .hero p { font-size:17px; max-width:600px; margin-bottom:20px; }
 .btn { background:#d4af37; color:#0f2a1a; padding:14px 28px; text-decoration:none; font-weight:bold; border-radius:30px; border:none; cursor:pointer; display:inline-block; }
-.btn2 { background:white; color:#0f2a1a; padding:14px 28px; text-decoration:none; font-weight:bold; border-radius:30px; border:none; cursor:pointer; display:inline-block; }
 .section { padding:50px 20px; max-width:1100px; margin:auto; }
 .section h2 { text-align:center; font-size:32px; margin-bottom:10px; color:#0f2a1a; }
 .section p.sub { text-align:center; color:#666; margin-bottom:30px; }
@@ -32,18 +31,23 @@ nav a { color:white; text-decoration:none; margin-left:18px; font-size:14px; }
 form { background:white; max-width:650px; margin:auto; padding:25px; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.1); }
 input, select, textarea { width:100%; padding:12px; margin:8px 0 15px; border:1px solid #ddd; border-radius:8px; }
 label { font-weight:bold; font-size:14px; }
+.total-box { background:#0f2a1a; color:white; padding:18px; border-radius:12px; text-align:center; margin:10px 0 15px; }
+.total-box b { color:#d4af37; font-size:26px; display:block; }
 footer { background:#0f2a1a; color:white; text-align:center; padding:25px; margin-top:40px; }
 </style>
 </head>
 <body>
-<header><h1>CLITCH <span>HOTEL</span></h1><nav><a href="#rooms">Rooms</a><a href="#facilities">Facilities</a><a href="#booking">Book Now</a><a href="guest.html">Guest Portal</a></nav></header>
-<div class="hero"><h2>Welcome to Clitch Hotel, Kumasi</h2><p>Luxury, Comfort & Ghanaian Hospitality in the Heart of the Garden City. Your perfect stay starts here.</p><div><a href="#booking" class="btn">BOOK YOUR STAY NOW</a> <a href="guest.html" class="btn2">👤 GUEST PORTAL</a></div><p style="font-size:13px;margin-top:15px;opacity:0.9">Already staying with us? Login to Guest Portal for WiFi & Room Service</p></div>
+<header><h1>CLITCH <span>HOTEL</span></h1><nav><a href="#rooms">Rooms</a><a href="#facilities">Facilities</a><a href="#booking">Book Now</a></nav></header>
+
+<div class="hero"><h2>Welcome to Clitch Hotel, Kumasi</h2><p>Luxury, Comfort & Ghanaian Hospitality in the Heart of the Garden City. Your perfect stay starts here.</p><div><a href="#booking" class="btn">BOOK YOUR STAY NOW</a></div></div>
+
 <div class="section" id="rooms"><h2>Our Rooms & Rates</h2><p class="sub">All rooms come with Free WiFi, Air Conditioning, Flat Screen TV, Fridge, Hot Shower & 24hr Room Service</p><div class="rooms">
 <div class="card"><img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800"><div class="card-body"><h3>Standard Room</h3><p>1 Double Bed • 1 Guest • City View</p><div class="price">GH₵ 350 / night</div></div></div>
 <div class="card"><img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800"><div class="card-body"><h3>Deluxe Room</h3><p>1 Queen Bed • 2 Guests • Balcony • Mini Bar</p><div class="price">GH₵ 500 / night</div></div></div>
 <div class="card"><img src="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800"><div class="card-body"><h3>Executive Room</h3><p>1 King Bed • 2 Guests • Work Desk • Lounge Access</p><div class="price">GH₵ 750 / night</div></div></div>
 <div class="card"><img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800"><div class="card-body"><h3>Royal Suite</h3><p>King Bed + Living Room • 4 Guests • Jacuzzi • VIP Service</p><div class="price">GH₵ 1,200 / night</div></div></div>
 </div></div>
+
 <div class="section" id="facilities"><h2>Facilities & Services</h2><p class="sub">Everything you need for a perfect stay</p><div class="facilities">
 <div class="fac"><span>🏊</span><b>Swimming Pool</b><p>Outdoor Pool & Bar</p></div>
 <div class="fac"><span>🍽️</span><b>Restaurant</b><p>Local & Continental</p></div>
@@ -54,20 +58,83 @@ footer { background:#0f2a1a; color:white; text-align:center; padding:25px; margi
 <div class="fac"><span>🅿️</span><b>Free Parking</b><p>Secure Parking</p></div>
 <div class="fac"><span>🛎️</span><b>24hr Room Service</b><p>Food & Laundry</p></div>
 </div></div>
-<div class="section" id="booking"><h2>Book Your Room</h2><p class="sub">Fill the form below and we will confirm your booking</p>
-<form id="bookingForm"><label>Full Name</label><input type="text" id="bName" placeholder="e.g. Kwame Mensah" required><label>Phone / WhatsApp</label><input type="tel" id="bPhone" placeholder="e.g. 055 123 4567" required><label>Room Type</label><select id="bRoom"><option>Standard Room - GH₵ 350 / night</option><option>Deluxe Room - GH₵ 500 / night</option><option>Executive Room - GH₵ 750 / night</option><option>Royal Suite - GH₵ 1,200 / night</option></select><label>Check-In Date</label><input type="date" id="bCheckin" required><label>Check-Out Date</label><input type="date" id="bCheckout" required><label>Number of Guests</label><select id="bGuests"><option>1 Guest</option><option>2 Guests</option><option>3 Guests</option><option>4 Guests</option></select><button type="submit" class="btn" style="width:100%">CONFIRM BOOKING</button><p id="success" style="display:none; color:green; font-weight:bold; margin-top:15px; text-align:center;">✅ Thank you! Your booking request has been received. Wait for Admin to confirm you.<br><br><a href="guest.html" style="color:#0f2a1a">→ Go to Guest Portal</a></p></form></div>
+
+<div class="section" id="booking"><h2>Book Your Room</h2><p class="sub">Create your account & book. Admin must confirm you before you get WiFi.</p>
+<form id="bookingForm">
+<label>Full Name</label><input type="text" id="bName" placeholder="e.g. Kwame Mensah" required>
+<label>Phone / WhatsApp</label><input type="tel" id="bPhone" placeholder="e.g. 055 123 4567" required>
+<label>Room Type</label>
+<select id="bRoom" onchange="calcTotal()">
+<option value="Standard Room" data-price="350">Standard Room - GH₵ 350 / night</option>
+<option value="Deluxe Room" data-price="500">Deluxe Room - GH₵ 500 / night</option>
+<option value="Executive Room" data-price="750">Executive Room - GH₵ 750 / night</option>
+<option value="Royal Suite" data-price="1200">Royal Suite - GH₵ 1,200 / night</option>
+</select>
+<label>Check-In Date</label><input type="date" id="bCheckin" onchange="calcTotal()" required>
+<label>Check-Out Date</label><input type="date" id="bCheckout" onchange="calcTotal()" required>
+<label>Number of Guests</label><select id="bGuests"><option>1 Guest</option><option>2 Guests</option><option>3 Guests</option><option>4 Guests</option></select>
+
+<div class="total-box">
+<span id="nightsText">Select dates to see total</span>
+<b id="totalText">GH₵ 0</b>
+<span style="font-size:12px;opacity:0.8" id="calcText"></span>
+</div>
+
+<button type="submit" class="btn" style="width:100%">CREATE ACCOUNT & BOOK</button>
+<p id="success" style="display:none; color:green; font-weight:bold; margin-top:15px; text-align:center;">✅ Thank you! Your account created. Wait for Admin to confirm you.<br><br><span id="successTotal"></span><br><br><a href="guest.html" style="color:#0f2a1a">→ Click here to check if Admin has confirmed you</a></p>
+</form></div>
+
 <div class="section" style="text-align:center;"><h2>Find Us</h2><p><b>Clitch Hotel</b><br>Kumasi, Ashanti Region, Ghana<br>📞 0552180298 | 📧 clitch@gmail.com<br>Open 24 Hours</p></div>
 <footer>© 2026 Clitch Hotel, Kumasi. All Rights Reserved.</footer>
+
 <script>
 const ADMIN_WHATSAPP = "233552180298";
+let currentNights = 0;
+let currentTotal = 0;
+let currentPricePerNight = 350;
+
+function calcTotal(){
+  let roomSelect = document.getElementById('bRoom');
+  let price = parseInt(roomSelect.options[roomSelect.selectedIndex].getAttribute('data-price'));
+  currentPricePerNight = price;
+  let checkin = document.getElementById('bCheckin').value;
+  let checkout = document.getElementById('bCheckout').value;
+  if(!checkin || !checkout){
+    document.getElementById('nightsText').innerText = 'Select dates to see total';
+    document.getElementById('totalText').innerText = 'GH₵ 0';
+    document.getElementById('calcText').innerText = '';
+    return;
+  }
+  let d1 = new Date(checkin);
+  let d2 = new Date(checkout);
+  let diff = Math.ceil((d2 - d1) / (1000 * 60 * 60 * 24));
+  if(diff <= 0){
+    document.getElementById('nightsText').innerText = '⚠️ Check-Out must be after Check-In';
+    document.getElementById('totalText').innerText = 'GH₵ 0';
+    document.getElementById('calcText').innerText = '';
+    currentNights = 0; currentTotal = 0; return;
+  }
+  currentNights = diff;
+  currentTotal = diff * price;
+  document.getElementById('nightsText').innerText = diff + (diff===1 ? ' Night' : ' Nights') + ' • ' + roomSelect.value;
+  document.getElementById('totalText').innerText = 'GH₵ ' + currentTotal.toLocaleString();
+  document.getElementById('calcText').innerText = 'GH₵ ' + price.toLocaleString() + ' x ' + diff + ' nights = GH₵ ' + currentTotal.toLocaleString();
+}
+
 document.getElementById('bookingForm').addEventListener('submit', function(e){
   e.preventDefault();
-  let booking = { name: document.getElementById('bName').value, phone: document.getElementById('bPhone').value, room: document.getElementById('bRoom').value, checkin: document.getElementById('bCheckin').value, checkout: document.getElementById('bCheckout').value, guests: document.getElementById('bGuests').value, status: 'Pending', created: new Date().toLocaleString() };
+  calcTotal();
+  if(currentNights <= 0){ alert('Please select valid Check-In and Check-Out dates'); return; }
+  let booking = { name: document.getElementById('bName').value, phone: document.getElementById('bPhone').value, room: document.getElementById('bRoom').value, checkin: document.getElementById('bCheckin').value, checkout: document.getElementById('bCheckout').value, guests: document.getElementById('bGuests').value, nights: currentNights, pricePerNight: currentPricePerNight, total: currentTotal, status: 'Pending', created: new Date().toLocaleString() };
   let old = JSON.parse(localStorage.getItem('clitch_bookings')||'[]'); old.push(booking); localStorage.setItem('clitch_bookings', JSON.stringify(old));
   let guests = JSON.parse(localStorage.getItem('clitch_guests')||'[]'); guests.push({name: booking.name, phone: booking.phone, room: booking.room, status:'Pending'}); localStorage.setItem('clitch_guests', JSON.stringify(guests));
-  let msg = `NEW BOOKING - CLITCH HOTEL%0A%0AName: ${booking.name}%0APhone: ${booking.phone}%0ARoom: ${booking.room}%0ACheck-In: ${booking.checkin}%0ACheck-Out: ${booking.checkout}%0AGuests: ${booking.guests}`;
+  let msg = `NEW BOOKING - CLITCH HOTEL%0A%0AName: ${booking.name}%0APhone: ${booking.phone}%0ARoom: ${booking.room}%0ACheck-In: ${booking.checkin}%0ACheck-Out: ${booking.checkout}%0ANights: ${booking.nights}%0APrice: GH₵ ${booking.pricePerNight} / night%0ATOTAL TO PAY: GH₵ ${booking.total}%0AGuests: ${booking.guests}`;
   window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${msg}`, '_blank');
+  document.getElementById('successTotal').innerText = 'Your Total: GH₵ ' + currentTotal.toLocaleString() + ' for ' + currentNights + ' nights';
   document.getElementById('success').style.display='block'; e.target.reset();
+  document.getElementById('nightsText').innerText = 'Select dates to see total';
+  document.getElementById('totalText').innerText = 'GH₵ 0';
+  document.getElementById('calcText').innerText = '';
 });
 </script>
 </body>
