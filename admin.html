@@ -28,12 +28,12 @@ label{font-weight:bold;font-size:13px}
 </style>
 </head>
 <body>
-<h1>CLITCH <span>HOTEL</span> - ADMIN</h1>
+<h1 id="pageTitle">CLITCH <span>HOTEL</span> - ADMIN</h1>
 
 <div class="box" id="loginBox">
-<h2>Staff Login</h2>
+<h2 id="loginTitle">Staff Login</h2>
 <p style="color:#666;font-size:14px">Select your role and enter password</p>
-<select id="role"><option value="manager">👨‍💼 Manager</option><option value="receptionist">👩‍💼 Receptionist</option></select>
+<select id="role" onchange="updateLoginTitle()"><option value="manager">👨‍💼 Manager</option><option value="receptionist">👩‍💼 Receptionist</option></select>
 <input type="password" id="pass" placeholder="Enter Password" autocomplete="off">
 <label style="font-weight:normal;font-size:14px;display:block;margin:5px 0"><input type="checkbox" onclick="document.getElementById('pass').type=this.checked?'text':'password'" style="width:auto"> Show Password</label>
 <button class="btn" onclick="login()">LOGIN</button>
@@ -42,28 +42,12 @@ label{font-weight:bold;font-size:13px}
 
 <div id="dash" style="display:none">
 <div class="box" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
-<div><b>Logged in as:</b> <span id="roleBadge" class="role-badge manager">MANAGER</span> <span id="roleName"></span></div>
+<div><b>Logged in as:</b> <span id="roleBadge" class="role-badge manager">MANAGER</span></div>
 <button class="btn btn-dark" style="width:auto;padding:8px 20px" onclick="logout()">LOGOUT</button>
 </div>
 
-<div class="box">
-<div class="stats">
-<div class="card"><b id="total">0</b><span>Total Bookings</span></div>
-<div class="card"><b id="today">0</b><span>Today</span></div>
-<div class="card"><b id="pending">0</b><span>Pending</span></div>
-<div class="card"><b id="confirmed">0</b><span>Confirmed</span></div>
-<div class="card card-gold"><b id="gained">GH₵ 0</b><span>💰 Money Gained (Confirmed)</span></div>
-<div class="card card-green"><b id="revenue">GH₵ 0</b><span>Expected Revenue (All)</span></div>
-</div>
-<p style="font-size:12px;color:#666;text-align:center;margin-top:10px">💰 <b>Money Gained</b> = Only Confirmed bookings</p>
-<input type="text" id="search" placeholder="🔍 Search by name or phone..." oninput="loadBookings()">
-<select id="filterRoom" onchange="loadBookings()"><option value="">All Rooms</option><option>Standard Room</option><option>Deluxe Room</option><option>Executive Room</option><option>Royal Suite</option></select>
-<select id="filterStatus" onchange="loadBookings()"><option value="">All Status</option><option>Pending</option><option>Confirmed</option><option>Cancelled</option></select>
-<button class="btn" onclick="loadBookings()">🔄 Refresh</button>
-</div>
-
-<!-- ADD PERSON - BOTH MANAGER + RECEPTIONIST CAN USE -->
-<div class="box addbox">
+<!-- ADD PERSON - NOW AT TOP, BOTH CAN SEE IMMEDIATELY -->
+<div class="box addbox" id="addPersonBox">
 <h2>➕ Add Person / Add Booking</h2>
 <label>Guest Name</label>
 <input type="text" id="addName" placeholder="e.g. Kwame Mensah">
@@ -79,6 +63,21 @@ label{font-weight:bold;font-size:13px}
 <select id="addStatus"><option>Pending</option><option>Confirmed</option></select>
 <button class="btn" style="background:#25D366;color:white" onclick="addPerson()">➕ ADD PERSON</button>
 <p id="addMsg" style="display:none;color:green;font-weight:bold;margin-top:10px">✅ Person Added!</p>
+</div>
+
+<div class="box">
+<div class="stats">
+<div class="card"><b id="total">0</b><span>Total Bookings</span></div>
+<div class="card"><b id="today">0</b><span>Today</span></div>
+<div class="card"><b id="pending">0</b><span>Pending</span></div>
+<div class="card"><b id="confirmed">0</b><span>Confirmed</span></div>
+<div class="card card-gold"><b id="gained">GH₵ 0</b><span>💰 Money Gained (Confirmed)</span></div>
+<div class="card card-green"><b id="revenue">GH₵ 0</b><span>Expected Revenue (All)</span></div>
+</div>
+<input type="text" id="search" placeholder="🔍 Search by name or phone..." oninput="loadBookings()">
+<select id="filterRoom" onchange="loadBookings()"><option value="">All Rooms</option><option>Standard Room</option><option>Deluxe Room</option><option>Executive Room</option><option>Royal Suite</option></select>
+<select id="filterStatus" onchange="loadBookings()"><option value="">All Status</option><option>Pending</option><option>Confirmed</option><option>Cancelled</option></select>
+<button class="btn" onclick="loadBookings()">🔄 Refresh</button>
 </div>
 
 <div class="box">
@@ -105,10 +104,14 @@ label{font-weight:bold;font-size:13px}
 <input type="number" id="setExecutive" placeholder="750">
 <label>Royal Suite Price (per night)</label>
 <input type="number" id="setRoyal" placeholder="1200">
-<label>Manager Password</label>
-<input type="text" id="setManagerPass" placeholder="Manager Password">
+<hr>
+<h3>👤 Create Reception Account</h3>
+<label>Receptionist Name</label>
+<input type="text" id="setReceptionName" placeholder="e.g. Ama Receptionist">
 <label>Receptionist Password</label>
 <input type="text" id="setReceptionPass" placeholder="Receptionist Password">
+<label>Manager Password</label>
+<input type="text" id="setManagerPass" placeholder="Manager Password">
 <button class="btn" onclick="saveSettings()">💾 SAVE SETTINGS</button>
 <p id="savedMsg" style="display:none;color:green;font-weight:bold;margin-top:10px">✅ Settings Saved!</p>
 </div>
@@ -116,18 +119,24 @@ label{font-weight:bold;font-size:13px}
 
 <script>
 let currentRole = '';
+function updateLoginTitle(){
+  let r = document.getElementById('role').value;
+  document.getElementById('loginTitle').innerText = r==='receptionist' ? 'Reception Login' : 'Manager Login';
+  document.getElementById('pageTitle').innerHTML = r==='receptionist' ? 'CLITCH <span>HOTEL</span> - RECEPTION' : 'CLITCH <span>HOTEL</span> - ADMIN';
+}
 window.onload = function(){
   try{
     let params = new URLSearchParams(window.location.search);
     let r = params.get('role');
     if(r === 'receptionist' || r === 'manager'){
       document.getElementById('role').value = r;
+      updateLoginTitle();
     }
   }catch(e){}
 }
 function getSettings(){
-  try{ return JSON.parse(localStorage.getItem('clitch_settings')||'{"wifi":"Clitch2026","prices":{"Standard":350,"Deluxe":500,"Executive":750,"Royal":1200},"managerPass":"manager123","receptionPass":"reception123"}'); }
-  catch(e){ return {wifi:"Clitch2026",prices:{Standard:350,Deluxe:500,Executive:750,Royal:1200},managerPass:"manager123",receptionPass:"reception123"}; }
+  try{ return JSON.parse(localStorage.getItem('clitch_settings')||'{"wifi":"Clitch2026","prices":{"Standard":350,"Deluxe":500,"Executive":750,"Royal":1200},"managerPass":"manager123","receptionPass":"reception123","receptionName":""}'); }
+  catch(e){ return {wifi:"Clitch2026",prices:{Standard:350,Deluxe:500,Executive:750,Royal:1200},managerPass:"manager123",receptionPass:"reception123",receptionName:""}; }
 }
 function login(){
   let role = document.getElementById('role').value;
@@ -142,23 +151,29 @@ function login(){
   if(!ok){
     let err = document.getElementById('loginError');
     err.style.display='block';
-    err.innerText = '❌ Wrong password for '+role+'. You typed: "'+rawPass+'" — Check Show Password and try again.';
+    err.innerText = '❌ Wrong password. Check Show Password and try again.';
     return;
   }
   document.getElementById('loginError').style.display='none';
   currentRole = role;
   document.getElementById('loginBox').style.display='none';
   document.getElementById('dash').style.display='block';
-  let badge = document.getElementById('roleBadge');
-  badge.innerText = role==='manager' ? '👨‍💼 MANAGER' : '👩‍💼 RECEPTIONIST';
-  badge.className = 'role-badge ' + (role==='manager' ? 'manager' : 'reception');
-  document.getElementById('roleName').innerText = role==='manager' ? ' - Full Control + Settings' : ' - Can Add + Confirm + See Money';
+  // CHANGE TITLE BASED ON ROLE - NO HINT TEXT
+  if(role==='receptionist'){
+    document.getElementById('pageTitle').innerHTML = 'CLITCH <span>HOTEL</span> - RECEPTION';
+    document.getElementById('roleBadge').innerText = '👩‍💼 RECEPTIONIST';
+    document.getElementById('roleBadge').className = 'role-badge reception';
+  } else {
+    document.getElementById('pageTitle').innerHTML = 'CLITCH <span>HOTEL</span> - ADMIN';
+    document.getElementById('roleBadge').innerText = '👨‍💼 MANAGER';
+    document.getElementById('roleBadge').className = 'role-badge manager';
+  }
   document.getElementById('settingsBox').style.display = role==='manager' ? 'block' : 'none';
   document.getElementById('dangerZone').style.display = role==='manager' ? 'block' : 'none';
   if(role==='manager'){ loadSettingsToForm(); }
   loadBookings();
 }
-function logout(){ currentRole=''; document.getElementById('dash').style.display='none'; document.getElementById('loginBox').style.display='block'; document.getElementById('pass').value=''; }
+function logout(){ currentRole=''; document.getElementById('dash').style.display='none'; document.getElementById('loginBox').style.display='block'; document.getElementById('pass').value=''; document.getElementById('pageTitle').innerHTML='CLITCH <span>HOTEL</span> - ADMIN'; }
 function loadSettingsToForm(){
   let s = getSettings();
   document.getElementById('setWifi').value = s.wifi;
@@ -168,9 +183,10 @@ function loadSettingsToForm(){
   document.getElementById('setRoyal').value = s.prices.Royal;
   document.getElementById('setManagerPass').value = s.managerPass;
   document.getElementById('setReceptionPass').value = s.receptionPass;
+  if(document.getElementById('setReceptionName')) document.getElementById('setReceptionName').value = s.receptionName||'';
 }
 function saveSettings(){
-  let s = { wifi: document.getElementById('setWifi').value || 'Clitch2026', prices: { Standard: parseInt(document.getElementById('setStandard').value)||350, Deluxe: parseInt(document.getElementById('setDeluxe').value)||500, Executive: parseInt(document.getElementById('setExecutive').value)||750, Royal: parseInt(document.getElementById('setRoyal').value)||1200 }, managerPass: document.getElementById('setManagerPass').value || 'manager123', receptionPass: document.getElementById('setReceptionPass').value || 'reception123' };
+  let s = { wifi: document.getElementById('setWifi').value || 'Clitch2026', prices: { Standard: parseInt(document.getElementById('setStandard').value)||350, Deluxe: parseInt(document.getElementById('setDeluxe').value)||500, Executive: parseInt(document.getElementById('setExecutive').value)||750, Royal: parseInt(document.getElementById('setRoyal').value)||1200 }, managerPass: document.getElementById('setManagerPass').value || 'manager123', receptionPass: document.getElementById('setReceptionPass').value || 'reception123', receptionName: document.getElementById('setReceptionName') ? document.getElementById('setReceptionName').value : '' };
   try{ localStorage.setItem('clitch_settings', JSON.stringify(s)); }catch(e){}
   document.getElementById('savedMsg').style.display='block';
   setTimeout(()=>{document.getElementById('savedMsg').style.display='none'},3000);
@@ -180,8 +196,6 @@ function getData(){ try{ return JSON.parse(localStorage.getItem('clitch_bookings
 function saveData(d){ try{ localStorage.setItem('clitch_bookings', JSON.stringify(d)); }catch(e){} }
 function calcNights(b){ if(b.nights) return b.nights; if(b.checkin && b.checkout){ let d = Math.ceil((new Date(b.checkout)-new Date(b.checkin))/(1000*60*60*24)); return d>0?d:0; } return 0; }
 function calcTotal(b){ if(b.total && b.pricePerNight) return b.total; let s=getSettings(); let p=350; for(let k in s.prices){ if(b.room.includes(k)) p=s.prices[k]; } return calcNights(b)*p; }
-
-// NEW: ADD PERSON - BOTH ROLES CAN DO THIS
 function addPerson(){
   let name = document.getElementById('addName').value.trim();
   let phone = document.getElementById('addPhone').value.trim();
