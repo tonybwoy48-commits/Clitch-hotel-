@@ -1,84 +1,84 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Clitch Hotel - Admin Dashboard</title>
+<title>Clitch Hotel - Kumasi | Luxury Stay in the Garden City</title>
 <style>
-*{box-sizing:border-box;font-family:Arial}body{background:#f8f5f0;margin:0;padding:15px}
-h1{color:#0f2a1a;text-align:center}h1 span{color:#d4af37}
-.box{background:white;max-width:1000px;margin:auto;padding:20px;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.1);margin-bottom:15px}
-input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ddd;border-radius:8px}
-.btn{background:#d4af37;color:#0f2a1a;padding:12px 20px;border:none;border-radius:30px;font-weight:bold;width:100%;cursor:pointer}
-.stats{display:flex;gap:10px;flex-wrap:wrap}.card{flex:1;min-width:120px;background:#0f2a1a;color:white;padding:15px;border-radius:12px;text-align:center}.card b{font-size:24px;color:#d4af37;display:block}.card span{font-size:12px}
-table{width:100%;border-collapse:collapse;margin-top:15px;font-size:12px}
-th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#0f2a1a;color:white}
-.small{padding:5px 8px;border:none;border-radius:5px;cursor:pointer;font-size:11px;margin:2px}
-.green{background:#25D366;color:white}.red{background:red;color:white}.grey{background:#333;color:white}
-.badge{padding:3px 8px;border-radius:10px;font-size:11px;font-weight:bold}
-.Pending{background:#ffeaa7}.Confirmed{background:#d4edda}.Cancelled{background:#f8d7da}
+* { margin:0; padding:0; box-sizing:border-box; font-family: Arial, sans-serif; }
+body { background:#f8f5f0; color:#222; }
+header { background:#0f2a1a; color:white; padding:15px 20px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:100; }
+header h1 { font-size:24px; }
+header h1 span { color:#d4af37; }
+nav a { color:white; text-decoration:none; margin-left:18px; font-size:14px; }
+.hero { background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200'); background-size:cover; background-position:center; height:480px; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; color:white; padding:20px; }
+.hero h2 { font-size:38px; margin-bottom:10px; }
+.hero p { font-size:17px; max-width:600px; margin-bottom:20px; }
+.btn { background:#d4af37; color:#0f2a1a; padding:14px 28px; text-decoration:none; font-weight:bold; border-radius:30px; border:none; cursor:pointer; }
+.section { padding:50px 20px; max-width:1100px; margin:auto; }
+.section h2 { text-align:center; font-size:32px; margin-bottom:10px; color:#0f2a1a; }
+.section p.sub { text-align:center; color:#666; margin-bottom:30px; }
+.rooms { display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:20px; }
+.card { background:white; border-radius:12px; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.1); }
+.card img { width:100%; height:180px; object-fit:cover; }
+.card-body { padding:18px; }
+.card-body h3 { margin-bottom:8px; }
+.card-body p { font-size:14px; color:#555; margin-bottom:10px; }
+.price { font-weight:bold; color:#0f2a1a; font-size:18px; }
+.facilities { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:15px; text-align:center; }
+.fac { background:white; padding:20px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.07); }
+.fac span { font-size:28px; display:block; margin-bottom:8px; }
+form { background:white; max-width:650px; margin:auto; padding:25px; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.1); }
+input, select, textarea { width:100%; padding:12px; margin:8px 0 15px; border:1px solid #ddd; border-radius:8px; }
+label { font-weight:bold; font-size:14px; }
+footer { background:#0f2a1a; color:white; text-align:center; padding:25px; margin-top:40px; }
 </style>
 </head>
 <body>
-<h1>CLITCH <span>HOTEL</span> - ADMIN</h1>
-<div class="box" id="loginBox">
-<h2>Admin Login</h2>
-<input type="password" id="pass" placeholder="Enter Password">
-<button class="btn" onclick="login()">LOGIN</button>
-<p style="font-size:12px;color:#888;text-align:center">Password: clitch123</p>
-</div>
-<div id="dash" style="display:none">
-<div class="box">
-<div class="stats">
-<div class="card"><b id="total">0</b><span>Total Bookings</span></div>
-<div class="card"><b id="today">0</b><span>Today</span></div>
-<div class="card"><b id="pending">0</b><span>Pending</span></div>
-<div class="card"><b id="confirmed">0</b><span>Confirmed</span></div>
-</div>
-<input type="text" id="search" placeholder="🔍 Search by name or phone..." oninput="loadBookings()">
-<select id="filterRoom" onchange="loadBookings()"><option value="">All Rooms</option><option>Deluxe Room</option><option>Executive Suite</option><option>Family Room</option><option>Standard Room</option></select>
-<button class="btn" onclick="loadBookings()">🔄 Refresh</button>
-</div>
-<div class="box">
-<div style="overflow-x:auto">
-<table><thead><tr><th>Date</th><th>Name</th><th>Phone</th><th>Room</th><th>Check-In</th><th>Check-Out</th><th>Guests</th><th>Status</th><th>Action</th></tr></thead><tbody id="list"></tbody></table>
-</div>
-<p id="empty" style="text-align:center;color:#888">No bookings yet.</p>
-<button class="small grey" onclick="clearAll()" style="padding:10px 20px">Clear All</button>
-<br><br><a href="index.html">← Back to Website</a>
-</div>
-</div>
+<header><h1>CLITCH <span>HOTEL</span></h1><nav><a href="#rooms">Rooms</a><a href="#facilities">Facilities</a><a href="#booking">Book Now</a><a href="admin.html">Admin</a></nav></header>
+<div class="hero"><h2>Welcome to Clitch Hotel, Kumasi</h2><p>Luxury, Comfort & Ghanaian Hospitality in the Heart of the Garden City. Your perfect stay starts here.</p><a href="#booking" class="btn">BOOK YOUR STAY NOW</a></div>
+<div class="section" id="rooms"><h2>Our Rooms & Rates</h2><p class="sub">All rooms come with Free WiFi, Air Conditioning, Flat Screen TV, Fridge, Hot Shower & 24hr Room Service</p><div class="rooms">
+<div class="card"><img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800"><div class="card-body"><h3>Standard Room</h3><p>1 Double Bed • 1 Guest • City View</p><div class="price">GH₵ 350 / night</div></div></div>
+<div class="card"><img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800"><div class="card-body"><h3>Deluxe Room</h3><p>1 Queen Bed • 2 Guests • Balcony • Mini Bar</p><div class="price">GH₵ 500 / night</div></div></div>
+<div class="card"><img src="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800"><div class="card-body"><h3>Executive Room</h3><p>1 King Bed • 2 Guests • Work Desk • Lounge Access</p><div class="price">GH₵ 750 / night</div></div></div>
+<div class="card"><img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800"><div class="card-body"><h3>Royal Suite</h3><p>King Bed + Living Room • 4 Guests • Jacuzzi • VIP Service</p><div class="price">GH₵ 1,200 / night</div></div></div>
+</div></div>
+<div class="section" id="facilities"><h2>Facilities & Services</h2><p class="sub">Everything you need for a perfect stay</p><div class="facilities">
+<div class="fac"><span>🏊</span><b>Swimming Pool</b><p>Outdoor Pool & Bar</p></div>
+<div class="fac"><span>🍽️</span><b>Restaurant</b><p>Local & Continental</p></div>
+<div class="fac"><span>🍹</span><b>Bar & Lounge</b><p>Drinks & Music</p></div>
+<div class="fac"><span>💪</span><b>Gym</b><p>Modern Fitness Centre</p></div>
+<div class="fac"><span>💼</span><b>Conference Hall</b><p>Meetings & Events</p></div>
+<div class="fac"><span>📶</span><b>Free WiFi</b><p>High-Speed in All Rooms</p></div>
+<div class="fac"><span>🅿️</span><b>Free Parking</b><p>Secure Parking</p></div>
+<div class="fac"><span>🛎️</span><b>24hr Room Service</b><p>Food & Laundry</p></div>
+</div></div>
+<div class="section" id="booking"><h2>Book Your Room</h2><p class="sub">Fill the form below and we will confirm your booking</p>
+<form id="bookingForm"><label>Full Name</label><input type="text" id="bName" placeholder="e.g. Kwame Mensah" required><label>Phone / WhatsApp</label><input type="tel" id="bPhone" placeholder="e.g. 055 123 4567" required><label>Room Type</label><select id="bRoom"><option>Standard Room - GH₵ 350 / night</option><option>Deluxe Room - GH₵ 500 / night</option><option>Executive Room - GH₵ 750 / night</option><option>Royal Suite - GH₵ 1,200 / night</option></select><label>Check-In Date</label><input type="date" id="bCheckin" required><label>Check-Out Date</label><input type="date" id="bCheckout" required><label>Number of Guests</label><select id="bGuests"><option>1 Guest</option><option>2 Guests</option><option>3 Guests</option><option>4 Guests</option></select><button type="submit" class="btn" style="width:100%">CONFIRM BOOKING</button><p id="success" style="display:none; color:green; font-weight:bold; margin-top:15px; text-align:center;">✅ Thank you! Your booking request has been received. We will call you to confirm.</p></form></div>
+<div class="section" style="text-align:center;"><h2>Find Us</h2><p><b>Clitch Hotel</b><br>Kumasi, Ashanti Region, Ghana<br>📞 +233 55 000 0000 | 📧 info@clitchhotel.com<br>Open 24 Hours</p></div>
+<footer>© 2026 Clitch Hotel, Kumasi. All Rights Reserved.</footer>
 <script>
-function login(){
-  if(document.getElementById('pass').value==='clitch123'){
-    document.getElementById('loginBox').style.display='none';
-    document.getElementById('dash').style.display='block';
-    loadBookings();
-  } else alert('Wrong password!');
-}
-function getData(){ return JSON.parse(localStorage.getItem('clitch_bookings')||'[]'); }
-function saveData(d){ localStorage.setItem('clitch_bookings', JSON.stringify(d)); }
-function loadBookings(){
-  let data = getData();
-  let q = document.getElementById('search').value.toLowerCase();
-  let fr = document.getElementById('filterRoom').value;
-  let filtered = data.filter(b => (!q || b.name.toLowerCase().includes(q) || b.phone.includes(q)) && (!fr || b.room.includes(fr)));
-  document.getElementById('total').innerText = data.length;
-  document.getElementById('today').innerText = data.filter(b=>b.created.includes(new Date().toLocaleDateString())).length;
-  document.getElementById('pending').innerText = data.filter(b=>(b.status||'Pending')==='Pending').length;
-  document.getElementById('confirmed').innerText = data.filter(b=>b.status==='Confirmed').length;
-  let html='';
-  filtered.forEach((b)=>{
-    let realIndex = data.indexOf(b);
-    let st = b.status||'Pending';
-    html+=`<tr><td>${b.created}</td><td>${b.name}</td><td>${b.phone}</td><td>${b.room}</td><td>${b.checkin}</td><td>${b.checkout}</td><td>${b.guests}</td><td><span class="badge ${st}">${st}</span></td><td><button class="small green" onclick="setStatus(${realIndex},'Confirmed')">✓ Confirm</button><button class="small red" onclick="setStatus(${realIndex},'Cancelled')">Cancel</button><a href="https://wa.me/${b.phone.replace(/[^0-9]/g,'')}" target="_blank"><button class="small green">WhatsApp</button></a><button class="small red" onclick="delOne(${realIndex})">Delete</button></td></tr>`;
-  });
-  document.getElementById('list').innerHTML=html;
-  document.getElementById('empty').style.display = filtered.length?'none':'block';
-}
-function setStatus(i,s){ let d=getData(); d[i].status=s; saveData(d); loadBookings(); }
-function delOne(i){ let d=getData(); d.splice(i,1); saveData(d); loadBookings(); }
-function clearAll(){ if(confirm('Delete ALL bookings?')){ localStorage.removeItem('clitch_bookings'); loadBookings(); } }
+const ADMIN_WHATSAPP = "233550000000";
+document.getElementById('bookingForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  let booking = {
+    name: document.getElementById('bName').value,
+    phone: document.getElementById('bPhone').value,
+    room: document.getElementById('bRoom').value,
+    checkin: document.getElementById('bCheckin').value,
+    checkout: document.getElementById('bCheckout').value,
+    guests: document.getElementById('bGuests').value,
+    status: 'Pending',
+    created: new Date().toLocaleString()
+  };
+  let old = JSON.parse(localStorage.getItem('clitch_bookings')||'[]');
+  old.push(booking);
+  localStorage.setItem('clitch_bookings', JSON.stringify(old));
+  let msg = `NEW BOOKING - CLITCH HOTEL%0A%0AName: ${booking.name}%0APhone: ${booking.phone}%0ARoom: ${booking.room}%0ACheck-In: ${booking.checkin}%0ACheck-Out: ${booking.checkout}%0AGuests: ${booking.guests}`;
+  window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${msg}`, '_blank');
+  document.getElementById('success').style.display='block';
+  e.target.reset();
+});
 </script>
 </body>
 </html>
