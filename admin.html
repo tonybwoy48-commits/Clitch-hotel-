@@ -21,61 +21,16 @@ th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#0f2a1a;co
 </head>
 <body>
 <h1>CLITCH <span>HOTEL</span> - ADMIN</h1>
-<div class="box" id="loginBox">
-<h2>Admin Login</h2>
-<input type="password" id="pass" placeholder="Enter Password">
-<button class="btn" onclick="login()">LOGIN</button>
-</div>
+<div class="box" id="loginBox"><h2>Admin Login</h2><input type="password" id="pass" placeholder="Enter Password"><button class="btn" onclick="login()">LOGIN</button></div>
 <div id="dash" style="display:none">
-<div class="box">
-<div class="stats">
-<div class="card"><b id="total">0</b><span>Total Bookings</span></div>
-<div class="card"><b id="today">0</b><span>Today</span></div>
-<div class="card"><b id="pending">0</b><span>Pending</span></div>
-<div class="card"><b id="confirmed">0</b><span>Confirmed</span></div>
-</div>
-<input type="text" id="search" placeholder="🔍 Search by name or phone..." oninput="loadBookings()">
-<select id="filterRoom" onchange="loadBookings()"><option value="">All Rooms</option><option>Standard Room</option><option>Deluxe Room</option><option>Executive Room</option><option>Royal Suite</option></select>
-<button class="btn" onclick="loadBookings()">🔄 Refresh</button>
-</div>
-<div class="box">
-<div style="overflow-x:auto">
-<table><thead><tr><th>Date</th><th>Name</th><th>Phone</th><th>Room</th><th>Check-In</th><th>Check-Out</th><th>Guests</th><th>Status</th><th>Action</th></tr></thead><tbody id="list"></tbody></table>
-</div>
-<p id="empty" style="text-align:center;color:#888">No bookings yet.</p>
-<button class="small grey" onclick="clearAll()" style="padding:10px 20px">Clear All</button>
-<br><br><a href="index.html">← Back to Website</a>
-</div>
-</div>
+<div class="box"><div class="stats"><div class="card"><b id="total">0</b><span>Total Bookings</span></div><div class="card"><b id="today">0</b><span>Today</span></div><div class="card"><b id="pending">0</b><span>Pending</span></div><div class="card"><b id="confirmed">0</b><span>Confirmed</span></div></div><input type="text" id="search" placeholder="🔍 Search by name or phone..." oninput="loadBookings()"><select id="filterRoom" onchange="loadBookings()"><option value="">All Rooms</option><option>Standard Room</option><option>Deluxe Room</option><option>Executive Room</option><option>Royal Suite</option></select><button class="btn" onclick="loadBookings()">🔄 Refresh</button></div>
+<div class="box"><div style="overflow-x:auto"><table><thead><tr><th>Date</th><th>Name</th><th>Phone</th><th>Room</th><th>Check-In</th><th>Check-Out</th><th>Guests</th><th>Status</th><th>Action</th></tr></thead><tbody id="list"></tbody></table></div><p id="empty" style="text-align:center;color:#888">No bookings yet.</p><button class="small grey" onclick="clearAll()" style="padding:10px 20px">Clear All</button><br><br><a href="index.html">← Back to Website</a></div></div>
 <script>
-function login(){
-  if(document.getElementById('pass').value==='clitch123'){
-    document.getElementById('loginBox').style.display='none';
-    document.getElementById('dash').style.display='block';
-    loadBookings();
-  } else alert('Wrong password!');
-}
+function login(){ if(document.getElementById('pass').value==='clitch123'){ document.getElementById('loginBox').style.display='none'; document.getElementById('dash').style.display='block'; loadBookings(); } else alert('Wrong password!'); }
 function getData(){ return JSON.parse(localStorage.getItem('clitch_bookings')||'[]'); }
 function saveData(d){ localStorage.setItem('clitch_bookings', JSON.stringify(d)); }
-function loadBookings(){
-  let data = getData();
-  let q = document.getElementById('search').value.toLowerCase();
-  let fr = document.getElementById('filterRoom').value;
-  let filtered = data.filter(b => (!q || b.name.toLowerCase().includes(q) || b.phone.includes(q)) && (!fr || b.room.includes(fr)));
-  document.getElementById('total').innerText = data.length;
-  document.getElementById('today').innerText = data.filter(b=>b.created.includes(new Date().toLocaleDateString())).length;
-  document.getElementById('pending').innerText = data.filter(b=>(b.status||'Pending')==='Pending').length;
-  document.getElementById('confirmed').innerText = data.filter(b=>b.status==='Confirmed').length;
-  let html='';
-  filtered.forEach((b)=>{
-    let realIndex = data.indexOf(b);
-    let st = b.status||'Pending';
-    html+=`<tr><td>${b.created}</td><td>${b.name}</td><td>${b.phone}</td><td>${b.room}</td><td>${b.checkin}</td><td>${b.checkout}</td><td>${b.guests}</td><td><span class="badge ${st}">${st}</span></td><td><button class="small green" onclick="setStatus(${realIndex},'Confirmed')">✓ Confirm</button><button class="small red" onclick="setStatus(${realIndex},'Cancelled')">Cancel</button><a href="https://wa.me/${b.phone.replace(/[^0-9]/g,'')}" target="_blank"><button class="small green">WhatsApp</button></a><button class="small red" onclick="delOne(${realIndex})">Delete</button></td></tr>`;
-  });
-  document.getElementById('list').innerHTML=html;
-  document.getElementById('empty').style.display = filtered.length?'none':'block';
-}
-function setStatus(i,s){ let d=getData(); d[i].status=s; saveData(d); loadBookings(); }
+function loadBookings(){ let data=getData(); let q=document.getElementById('search').value.toLowerCase(); let fr=document.getElementById('filterRoom').value; let filtered=data.filter(b=>(!q||b.name.toLowerCase().includes(q)||b.phone.includes(q))&&(!fr||b.room.includes(fr))); document.getElementById('total').innerText=data.length; document.getElementById('today').innerText=data.filter(b=>b.created.includes(new Date().toLocaleDateString())).length; document.getElementById('pending').innerText=data.filter(b=>(b.status||'Pending')==='Pending').length; document.getElementById('confirmed').innerText=data.filter(b=>b.status==='Confirmed').length; let html=''; filtered.forEach((b)=>{ let realIndex=data.indexOf(b); let st=b.status||'Pending'; html+=`<tr><td>${b.created}</td><td>${b.name}</td><td>${b.phone}</td><td>${b.room}</td><td>${b.checkin}</td><td>${b.checkout}</td><td>${b.guests}</td><td><span class="badge ${st}">${st}</span></td><td><button class="small green" onclick="setStatus(${realIndex},'Confirmed')">✓ Confirm</button><button class="small red" onclick="setStatus(${realIndex},'Cancelled')">Cancel</button><a href="https://wa.me/${b.phone.replace(/[^0-9]/g,'')}" target="_blank"><button class="small green">WhatsApp</button></a><button class="small red" onclick="delOne(${realIndex})">Delete</button></td></tr>`; }); document.getElementById('list').innerHTML=html; document.getElementById('empty').style.display=filtered.length?'none':'block'; }
+function setStatus(i,s){ let d=getData(); d[i].status=s; saveData(d); let guests=JSON.parse(localStorage.getItem('clitch_guests')||'[]'); let g=guests.find(x=>x.phone===d[i].phone); if(g) g.status=s; localStorage.setItem('clitch_guests', JSON.stringify(guests)); loadBookings(); }
 function delOne(i){ let d=getData(); d.splice(i,1); saveData(d); loadBookings(); }
 function clearAll(){ if(confirm('Delete ALL bookings?')){ localStorage.removeItem('clitch_bookings'); loadBookings(); } }
 </script>
