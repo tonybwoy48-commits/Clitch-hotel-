@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clitch Hotel - Guest Portal</title>
+<style>
+*{box-sizing:border-box;font-family:Arial}body{background:#f8f5f0;margin:0;padding:15px}
+h1{color:#0f2a1a;text-align:center}h1 span{color:#d4af37}
+.box{background:white;max-width:600px;margin:auto;padding:25px;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.1);margin-bottom:15px;text-align:center}
+input,select,textarea{width:100%;padding:12px;margin:8px 0;border:1px solid #ddd;border-radius:8px}
+.btn{background:#d4af37;color:#0f2a1a;padding:14px 20px;border:none;border-radius:30px;font-weight:bold;width:100%;cursor:pointer;margin:5px 0}
+.btn-white{background:#0f2a1a;color:white}
+.wifi{background:#0f2a1a;color:white;padding:22px;border-radius:12px;margin:15px 0}
+.wifi b{font-size:30px;color:#d4af37;display:block;letter-spacing:2px;margin:5px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.req{background:white;border:2px solid #eee;padding:18px;border-radius:12px;cursor:pointer;font-weight:bold}
+.req span{font-size:28px;display:block}
+.req:hover{border-color:#d4af37;background:#fffbe6}
+.hidden{display:none}
+.tabs{display:flex;gap:10px;margin-bottom:10px}.tabs button{flex:1;padding:12px;border:none;border-radius:20px;cursor:pointer;font-weight:bold}.active{background:#0f2a1a;color:white}.inactive{background:#eee}
+.waiting{background:#fff3cd;border:2px solid #d4af37;padding:20px;border-radius:12px}
+</style>
+</head>
+<body>
+<h1>CLITCH <span>HOTEL</span></h1>
+<p style="text-align:center;color:#666">Guest Portal - Kumasi</p>
+
+<div class="box" id="authBox">
+<div class="tabs"><button id="tabLogin" class="active" onclick="showTab('login')">LOGIN</button><button id="tabCreate" class="inactive" onclick="showTab('create')">CREATE ACCOUNT</button></div>
+<div id="loginForm">
+<h2>Welcome Back 👋</h2>
+<p style="color:#666;font-size:14px">Login with your phone number.<br>Your account must be <b>Confirmed by Admin</b> first.</p>
+<input type="tel" id="loginPhone" placeholder="Phone number e.g. 0552180298">
+<button class="btn" onclick="guestLogin()">LOGIN</button>
+<p style="font-size:12px;color:#888">New guest? Tap CREATE ACCOUNT above</p>
+</div>
+<div id="createForm" class="hidden">
+<h2>Create Your Guest Account ✨</h2>
+<p style="color:#666;font-size:14px">After you create account, Admin must confirm you before you see WiFi.</p>
+<input type="text" id="cName" placeholder="Full Name e.g. Kwame Mensah">
+<input type="tel" id="cPhone" placeholder="Phone / WhatsApp e.g. 055 123 4567">
+<input type="text" id="cRoomNo" placeholder="Room Number e.g. Room 12 (if you know it)">
+<select id="cRoomType"><option>Standard Room</option><option>Deluxe Room</option><option>Executive Room</option><option>Royal Suite</option></select>
+<button class="btn" onclick="createAccount()">CREATE ACCOUNT</button>
+</div>
+</div>
+
+<div class="box hidden" id="waitingBox">
+<h2>⏳ Waiting For Confirmation</h2>
+<div class="waiting">
+<p style="font-size:16px"><b id="waitName"></b></p>
+<p>Your account has been received.<br>Please wait for Admin to confirm you.</p>
+<p style="font-size:14px;color:#666">Once Admin confirms, you will see WiFi Password & Services here.<br>Tap Refresh below to check.</p>
+</div>
+<button class="btn" onclick="checkStatus()">🔄 CHECK IF ADMIN CONFIRMED ME</button>
+<button class="btn btn-white" onclick="logout()">LOGOUT / USE ANOTHER NUMBER</button>
+<p style="font-size:12px;color:#888">Need help? Call Reception: 0552180298</p>
+</div>
+
+<div id="dash" class="hidden">
+<div class="box">
+<h2 id="welcomeName">Welcome!</h2>
+<p id="welcomeRoom" style="color:#666"></p>
+<p style="color:green;font-weight:bold">✅ Confirmed by Admin</p>
+<div class="wifi"><span>📶 HOTEL WiFi</span><b id="wifiPass">Clitch2026</b><span style="font-size:13px">WiFi Name: CLITCH-HOTEL</span><br><button onclick="copyWifi()" style="margin-top:10px;padding:8px 15px;border:none;border-radius:20px;background:#d4af37;font-weight:bold;cursor:pointer">📋 Copy Password</button></div>
+</div>
+<div class="box">
+<h3>Request Service 🛎️</h3>
+<p style="color:#666;font-size:14px">Tap any request - Goes straight to Reception on WhatsApp</p>
+<div class="grid">
+<div class="req" onclick="requestService('🍽️ Food / Room Service')"><span>🍽️</span>Food / Room Service</div>
+<div class="req" onclick="requestService('🧹 Room Cleaning')"><span>🧹</span>Room Cleaning</div>
+<div class="req" onclick="requestService('🛏️ Extra Towels / Bedsheet')"><span>🛏️</span>Towels / Bedsheet</div>
+<div class="req" onclick="requestService('💧 Drinking Water')"><span>💧</span>Drinking Water</div>
+<div class="req" onclick="requestService('🍳 Breakfast')"><span>🍳</span>Breakfast</div>
+<div class="req" onclick="requestService('🚕 Taxi / Transport')"><span>🚕</span>Taxi</div>
+<div class="req" onclick="requestService('🔧 Repair - AC / TV / Shower')"><span>🔧</span>Repair</div>
+<div class="req" onclick="requestService('🧳 Laundry Service')"><span>🧳</span>Laundry</div>
+<div class="req" onclick="requestService('🛏️ Extra Pillow')"><span>🛏️</span>Extra Pillow</div>
+<div class="req" onclick="requestService('⏰ Late Checkout Request')"><span>⏰</span>Late Checkout</div>
+<div class="req" onclick="requestService('🧊 Ice / Drinks')"><span>🧊</span>Ice / Drinks</div>
+<div class="req" onclick="requestService('📞 Call Reception')"><span>📞</span>Call Reception</div>
+</div>
+</div>
+<div class="box">
+<h3>Other Request ✍️</h3>
+<textarea id="customReq" rows="3" placeholder="Type anything you need..."></textarea>
+<button class="btn" onclick="sendCustom()">SEND REQUEST</button>
+<p id="sentMsg" style="display:none;color:green;font-weight:bold;margin-top:10px">✅ Request Sent! Reception will attend to you soon.</p>
+</div>
+<div class="box">
+<p>📞 Reception: <b>0552180298</b><br>📧 clitch@gmail.com<br>📍 Kumasi, Ashanti Region</p>
+<button class="btn btn-white" onclick="logout()">LOGOUT</button><br><br><a href="index.html">← Back to Website</a>
+</div>
+</div>
+
+<script>
+const ADMIN_WHATSAPP = "233552180298";
+const WIFI_PASS = "Clitch2026";
+let currentGuest = null;
+function showTab(t){
+  document.getElementById('loginForm').classList.toggle('hidden', t!=='login');
+  document.getElementById('createForm').classList.toggle('hidden', t!=='create');
+  document.getElementById('tabLogin').className = t==='login' ? 'active' : 'inactive';
+  document.getElementById('tabCreate').className = t==='create' ? 'active' : 'inactive';
+}
+function cleanPhone(p){ return (p||'').replace(/[^0-9]/g,'').slice(-9); }
+function showWaiting(){
+  document.getElementById('authBox').style.display='none';
+  document.getElementById('dash').classList.add('hidden');
+  document.getElementById('waitingBox').classList.remove('hidden');
+  document.getElementById('waitName').innerText = 'Hello ' + currentGuest.name;
+}
+function openDash(){
+  document.getElementById('authBox').style.display='none';
+  document.getElementById('waitingBox').classList.add('hidden');
+  document.getElementById('dash').classList.remove('hidden');
+  document.getElementById('welcomeName').innerText = 'Welcome, ' + currentGuest.name + ' 👋';
+  document.getElementById('welcomeRoom').innerText = (currentGuest.roomNo ? currentGuest.roomNo + ' • ' : '') + (currentGuest.room||'');
+  document.getElementById('wifiPass').innerText = WIFI_PASS;
+}
+function checkIfConfirmed(){
+  let bookings = JSON.parse(localStorage.getItem('clitch_bookings')||'[]');
+  let guests = JSON.parse(localStorage.getItem('clitch_guests')||'[]');
+  let b = bookings.find(x => cleanPhone(x.phone)===cleanPhone(currentGuest.phone));
+  let g = guests.find(x => cleanPhone(x.phone)===cleanPhone(currentGuest.phone));
+  if( (b && b.status==='Confirmed') || (g && g.status==='Confirmed') ){ openDash(); return true; } else { return false; }
+}
+function createAccount(){
+  let name=document.getElementById('cName').value.trim();
+  let phone=document.getElementById('cPhone').value.trim();
+  let roomNo=document.getElementById('cRoomNo').value.trim();
+  let room=document.getElementById('cRoomType').value;
+  if(!name || !phone){ alert('Please enter Name and Phone'); return; }
+  currentGuest={name, phone, room, roomNo, status:'Pending'};
+  let guests=JSON.parse(localStorage.getItem('clitch_guests')||'[]');
+  guests.push(currentGuest); localStorage.setItem('clitch_guests', JSON.stringify(guests));
+  let bookings=JSON.parse(localStorage.getItem('clitch_bookings')||'[]');
+  bookings.push({name, phone, room: room + (roomNo? ' - '+roomNo:''), checkin:'Walk-In', checkout:'-', guests:'-', status:'Pending', created: new Date().toLocaleString()});
+  localStorage.setItem('clitch_bookings', JSON.stringify(bookings));
+  localStorage.setItem('clitch_current_guest', JSON.stringify(currentGuest));
+  let msg = `NEW GUEST ACCOUNT - CLITCH HOTEL%0A%0AName: ${name}%0APhone: ${phone}%0ARoom: ${room} ${roomNo}%0A%0APlease CONFIRM this guest in Admin so they can see WiFi.`;
+  window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${msg}`, '_blank');
+  showWaiting();
+}
+function guestLogin(){
+  let phone=document.getElementById('loginPhone').value.trim();
+  if(!phone){ alert('Enter your phone number'); return; }
+  let guests=JSON.parse(localStorage.getItem('clitch_guests')||'[]');
+  let bookings=JSON.parse(localStorage.getItem('clitch_bookings')||'[]');
+  let found = guests.find(g=>cleanPhone(g.phone)===cleanPhone(phone)) || bookings.find(b=>cleanPhone(b.phone)===cleanPhone(phone));
+  if(found){ currentGuest={name:found.name, phone:found.phone, room:found.room||'Guest', roomNo:found.roomNo||'', status:found.status||'Pending'}; }
+  else { alert('No account found with this number. Please Create Account first.'); showTab('create'); return; }
+  localStorage.setItem('clitch_current_guest', JSON.stringify(currentGuest));
+  if(!checkIfConfirmed()){ showWaiting(); }
+}
+function checkStatus(){
+  if(checkIfConfirmed()){ alert('✅ You are Confirmed! Welcome!'); }
+  else { alert('⏳ Not yet confirmed. Please wait for Admin to confirm you.'); }
+}
+function requestService(service){
+  let msg = `GUEST REQUEST - CLITCH HOTEL%0A%0AName: ${currentGuest.name}%0APhone: ${currentGuest.phone}%0ARoom: ${currentGuest.roomNo||''} ${currentGuest.room}%0A%0ARequest: ${service}`;
+  window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${msg}`, '_blank');
+  showSent();
+}
+function sendCustom(){
+  let txt=document.getElementById('customReq').value;
+  if(!txt){ alert('Type your request first'); return; }
+  let msg = `GUEST REQUEST - CLITCH HOTEL%0A%0AName: ${currentGuest.name}%0APhone: ${currentGuest.phone}%0ARoom: ${currentGuest.roomNo||''} ${currentGuest.room}%0A%0ARequest: ${txt}`;
+  window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${msg}`, '_blank');
+  document.getElementById('customReq').value=''; showSent();
+}
+function showSent(){ document.getElementById('sentMsg').style.display='block'; setTimeout(()=>{document.getElementById('sentMsg').style.display='none'},4000); }
+function copyWifi(){ navigator.clipboard.writeText(WIFI_PASS); alert('WiFi Password Copied: ' + WIFI_PASS); }
+function logout(){ localStorage.removeItem('clitch_current_guest'); location.reload(); }
+let saved = localStorage.getItem('clitch_current_guest');
+if(saved){ currentGuest=JSON.parse(saved); if(!checkIfConfirmed()) showWaiting(); }
+</script>
+</body>
+</html>
