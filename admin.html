@@ -7,34 +7,196 @@
 <style>
 *{box-sizing:border-box;font-family:Arial}body{background:#f8f5f0;margin:0;padding:15px}
 h1{color:#0f2a1a;text-align:center}h1 span{color:#d4af37}
-.box{background:white;max-width:1100px;margin:auto;padding:20px;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.1);margin-bottom:15px}
+.box{background:white;max-width:1150px;margin:auto;padding:20px;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.1);margin-bottom:15px}
 input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ddd;border-radius:8px}
 .btn{background:#d4af37;color:#0f2a1a;padding:12px 20px;border:none;border-radius:30px;font-weight:bold;width:100%;cursor:pointer}
-.stats{display:flex;gap:10px;flex-wrap:wrap}.card{flex:1;min-width:120px;background:#0f2a1a;color:white;padding:15px;border-radius:12px;text-align:center}.card b{font-size:24px;color:#d4af37;display:block}.card span{font-size:12px}
+.btn-dark{background:#0f2a1a;color:white}
+.stats{display:flex;gap:10px;flex-wrap:wrap}.card{flex:1;min-width:140px;background:#0f2a1a;color:white;padding:15px;border-radius:12px;text-align:center}.card b{font-size:22px;color:#d4af37;display:block}.card span{font-size:12px}
+.card-gold{background:#d4af37;color:#0f2a1a}.card-gold b{color:#0f2a1a}.card-gold span{color:#0f2a1a}
+.card-green{background:#1a7a3a}.card-green b{color:white}
 table{width:100%;border-collapse:collapse;margin-top:15px;font-size:12px}
 th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#0f2a1a;color:white}
-.small{padding:5px 8px;border:none;border-radius:5px;cursor:pointer;font-size:11px;margin:2px}
-.green{background:#25D366;color:white}.red{background:red;color:white}.grey{background:#333;color:white}
+.small{padding:6px 10px;border:none;border-radius:5px;cursor:pointer;font-size:11px;margin:2px;font-weight:bold}
+.green{background:#25D366;color:white}.red{background:#e74c3c;color:white}.grey{background:#333;color:white}.gold{background:#d4af37;color:#0f2a1a}
 .badge{padding:3px 8px;border-radius:10px;font-size:11px;font-weight:bold}
 .Pending{background:#ffeaa7}.Confirmed{background:#d4edda}.Cancelled{background:#f8d7da}
+.role-badge{padding:8px 15px;border-radius:20px;font-weight:bold;display:inline-block}
+.manager{background:#d4af37;color:#0f2a1a}.reception{background:#0f2a1a;color:white}
+.settings{border:2px solid #d4af37;background:#fffbe6}
+label{font-weight:bold;font-size:13px}
 </style>
 </head>
 <body>
 <h1>CLITCH <span>HOTEL</span> - ADMIN</h1>
-<div class="box" id="loginBox"><h2>Admin Login</h2><input type="password" id="pass" placeholder="Enter Password"><button class="btn" onclick="login()">LOGIN</button></div>
+
+<!-- LOGIN -->
+<div class="box" id="loginBox">
+<h2>Staff Login</h2>
+<p style="color:#666;font-size:14px">Select your role and enter password</p>
+<select id="role"><option value="manager">👨‍💼 Manager</option><option value="receptionist">👩‍💼 Receptionist</option></select>
+<input type="password" id="pass" placeholder="Enter Password">
+<button class="btn" onclick="login()">LOGIN</button>
+<p style="font-size:12px;color:#888;text-align:center;margin-top:10px">Manager Password: manager123<br>Receptionist Password: reception123<br>Manager can change passwords in Settings below</p>
+</div>
+
+<!-- DASHBOARD -->
 <div id="dash" style="display:none">
-<div class="box"><div class="stats"><div class="card"><b id="total">0</b><span>Total Bookings</span></div><div class="card"><b id="today">0</b><span>Today</span></div><div class="card"><b id="pending">0</b><span>Pending</span></div><div class="card"><b id="confirmed">0</b><span>Confirmed</span></div><div class="card"><b id="revenue">GH₵ 0</b><span>Expected Revenue</span></div></div><input type="text" id="search" placeholder="🔍 Search by name or phone..." oninput="loadBookings()"><select id="filterRoom" onchange="loadBookings()"><option value="">All Rooms</option><option>Standard Room</option><option>Deluxe Room</option><option>Executive Room</option><option>Royal Suite</option></select><button class="btn" onclick="loadBookings()">🔄 Refresh</button></div>
-<div class="box"><div style="overflow-x:auto"><table><thead><tr><th>Date</th><th>Name</th><th>Phone</th><th>Room</th><th>Check-In</th><th>Check-Out</th><th>Nights</th><th>Total</th><th>Status</th><th>Action</th></tr></thead><tbody id="list"></tbody></table></div><p id="empty" style="text-align:center;color:#888">No bookings yet.</p><button class="small grey" onclick="clearAll()" style="padding:10px 20px">Clear All</button><br><br><a href="index.html">← Back to Website</a></div></div>
+
+<div class="box" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+<div><b>Logged in as:</b> <span id="roleBadge" class="role-badge manager">MANAGER</span> <span id="roleName"></span></div>
+<button class="btn btn-dark" style="width:auto;padding:8px 20px" onclick="logout()">LOGOUT</button>
+</div>
+
+<!-- TOP STATS - BOTH CAN SEE -->
+<div class="box">
+<div class="stats">
+<div class="card"><b id="total">0</b><span>Total Bookings</span></div>
+<div class="card"><b id="today">0</b><span>Today</span></div>
+<div class="card"><b id="pending">0</b><span>Pending</span></div>
+<div class="card"><b id="confirmed">0</b><span>Confirmed</span></div>
+<div class="card card-gold"><b id="gained">GH₵ 0</b><span>💰 Money Gained (Confirmed)</span></div>
+<div class="card card-green"><b id="revenue">GH₵ 0</b><span>Expected Revenue (All)</span></div>
+</div>
+<p style="font-size:12px;color:#666;text-align:center;margin-top:10px">💰 <b>Money Gained</b> = Only Confirmed bookings • Both Manager & Receptionist can see this to make judgment</p>
+<input type="text" id="search" placeholder="🔍 Search by name or phone..." oninput="loadBookings()">
+<select id="filterRoom" onchange="loadBookings()"><option value="">All Rooms</option><option>Standard Room</option><option>Deluxe Room</option><option>Executive Room</option><option>Royal Suite</option></select>
+<select id="filterStatus" onchange="loadBookings()"><option value="">All Status</option><option>Pending</option><option>Confirmed</option><option>Cancelled</option></select>
+<button class="btn" onclick="loadBookings()">🔄 Refresh</button>
+</div>
+
+<!-- BOOKINGS TABLE -->
+<div class="box">
+<div style="overflow-x:auto">
+<table><thead><tr><th>Date</th><th>Name</th><th>Phone</th><th>Room</th><th>Check-In</th><th>Check-Out</th><th>Nights</th><th>Total</th><th>Status</th><th>Action</th></tr></thead><tbody id="list"></tbody></table>
+</div>
+<p id="empty" style="text-align:center;color:#888">No bookings yet.</p>
+<div id="dangerZone">
+<hr>
+<button class="small grey" onclick="clearAll()" style="padding:10px 20px">Clear All Bookings</button>
+<p style="font-size:11px;color:#888">Only Manager can delete / clear. Receptionist cannot.</p>
+</div>
+<br><a href="index.html">← Back to Website</a>
+</div>
+
+<!-- SETTINGS - ONLY MANAGER -->
+<div class="box settings" id="settingsBox">
+<h2>⚙️ Manager Settings — ONLY MANAGER CAN SEE THIS</h2>
+<p style="color:#666;font-size:13px">Receptionist cannot see or change this section. Manager has full veto / control.</p>
+<label>WiFi Password (Guest sees this after you confirm them)</label>
+<input type="text" id="setWifi" placeholder="e.g. Clitch2026">
+<label>Standard Room Price (per night)</label>
+<input type="number" id="setStandard" placeholder="350">
+<label>Deluxe Room Price (per night)</label>
+<input type="number" id="setDeluxe" placeholder="500">
+<label>Executive Room Price (per night)</label>
+<input type="number" id="setExecutive" placeholder="750">
+<label>Royal Suite Price (per night)</label>
+<input type="number" id="setRoyal" placeholder="1200">
+<label>Manager Password</label>
+<input type="text" id="setManagerPass" placeholder="manager123">
+<label>Receptionist Password</label>
+<input type="text" id="setReceptionPass" placeholder="reception123">
+<button class="btn" onclick="saveSettings()">💾 SAVE SETTINGS</button>
+<p id="savedMsg" style="display:none;color:green;font-weight:bold;margin-top:10px">✅ Settings Saved!</p>
+</div>
+
+</div>
+
 <script>
-function login(){ if(document.getElementById('pass').value==='clitch123'){ document.getElementById('loginBox').style.display='none'; document.getElementById('dash').style.display='block'; loadBookings(); } else alert('Wrong password!'); }
+let currentRole = '';
+function getSettings(){ return JSON.parse(localStorage.getItem('clitch_settings')||'{"wifi":"Clitch2026","prices":{"Standard":350,"Deluxe":500,"Executive":750,"Royal":1200},"managerPass":"manager123","receptionPass":"reception123"}'); }
+
+function login(){
+  let role = document.getElementById('role').value;
+  let pass = document.getElementById('pass').value;
+  let s = getSettings();
+  if( (role==='manager' && (pass===s.managerPass || pass==='clitch123')) || (role==='receptionist' && pass===s.receptionPass) ){
+    currentRole = role;
+    document.getElementById('loginBox').style.display='none';
+    document.getElementById('dash').style.display='block';
+    let badge = document.getElementById('roleBadge');
+    badge.innerText = role==='manager' ? '👨‍💼 MANAGER' : '👩‍💼 RECEPTIONIST';
+    badge.className = 'role-badge ' + (role==='manager' ? 'manager' : 'reception');
+    document.getElementById('roleName').innerText = role==='manager' ? ' - Full Control + Settings + Veto' : ' - Can Confirm + See Money, Cannot Change Settings';
+    document.getElementById('settingsBox').style.display = role==='manager' ? 'block' : 'none';
+    document.getElementById('dangerZone').style.display = role==='manager' ? 'block' : 'none';
+    if(role==='manager'){ loadSettingsToForm(); }
+    loadBookings();
+  } else { alert('Wrong password for ' + role + '!'); }
+}
+function logout(){ currentRole=''; document.getElementById('dash').style.display='none'; document.getElementById('loginBox').style.display='block'; document.getElementById('pass').value=''; }
+
+function loadSettingsToForm(){
+  let s = getSettings();
+  document.getElementById('setWifi').value = s.wifi;
+  document.getElementById('setStandard').value = s.prices.Standard;
+  document.getElementById('setDeluxe').value = s.prices.Deluxe;
+  document.getElementById('setExecutive').value = s.prices.Executive;
+  document.getElementById('setRoyal').value = s.prices.Royal;
+  document.getElementById('setManagerPass').value = s.managerPass;
+  document.getElementById('setReceptionPass').value = s.receptionPass;
+}
+function saveSettings(){
+  if(currentRole!=='manager'){ alert('Only Manager can change settings!'); return; }
+  let s = { wifi: document.getElementById('setWifi').value || 'Clitch2026', prices: { Standard: parseInt(document.getElementById('setStandard').value)||350, Deluxe: parseInt(document.getElementById('setDeluxe').value)||500, Executive: parseInt(document.getElementById('setExecutive').value)||750, Royal: parseInt(document.getElementById('setRoyal').value)||1200 }, managerPass: document.getElementById('setManagerPass').value || 'manager123', receptionPass: document.getElementById('setReceptionPass').value || 'reception123' };
+  localStorage.setItem('clitch_settings', JSON.stringify(s));
+  document.getElementById('savedMsg').style.display='block';
+  setTimeout(()=>{document.getElementById('savedMsg').style.display='none'},3000);
+  loadBookings();
+}
+
 function getData(){ return JSON.parse(localStorage.getItem('clitch_bookings')||'[]'); }
 function saveData(d){ localStorage.setItem('clitch_bookings', JSON.stringify(d)); }
 function calcNights(b){ if(b.nights) return b.nights; if(b.checkin && b.checkout){ let d = Math.ceil((new Date(b.checkout)-new Date(b.checkin))/(1000*60*60*24)); return d>0?d:0; } return 0; }
-function calcTotal(b){ if(b.total) return b.total; let prices={ 'Standard':350, 'Deluxe':500, 'Executive':750, 'Royal':1200 }; let p=350; for(let k in prices){ if(b.room.includes(k)) p=prices[k]; } return calcNights(b)*p; }
-function loadBookings(){ let data=getData(); let q=document.getElementById('search').value.toLowerCase(); let fr=document.getElementById('filterRoom').value; let filtered=data.filter(b=>(!q||b.name.toLowerCase().includes(q)||b.phone.includes(q))&&(!fr||b.room.includes(fr))); document.getElementById('total').innerText=data.length; document.getElementById('today').innerText=data.filter(b=>b.created.includes(new Date().toLocaleDateString())).length; document.getElementById('pending').innerText=data.filter(b=>(b.status||'Pending')==='Pending').length; document.getElementById('confirmed').innerText=data.filter(b=>b.status==='Confirmed').length; let rev = data.filter(b=>b.status!=='Cancelled').reduce((sum,b)=>sum+calcTotal(b),0); document.getElementById('revenue').innerText='GH₵ '+rev.toLocaleString(); let html=''; filtered.forEach((b)=>{ let realIndex=data.indexOf(b); let st=b.status||'Pending'; let n=calcNights(b); let t=calcTotal(b); html+=`<tr><td>${b.created}</td><td>${b.name}</td><td>${b.phone}</td><td>${b.room}</td><td>${b.checkin}</td><td>${b.checkout}</td><td><b>${n} nights</b></td><td><b>GH₵ ${t.toLocaleString()}</b></td><td><span class="badge ${st}">${st}</span></td><td><button class="small green" onclick="setStatus(${realIndex},'Confirmed')">✓ Confirm</button><button class="small red" onclick="setStatus(${realIndex},'Cancelled')">Cancel</button><a href="https://wa.me/${b.phone.replace(/[^0-9]/g,'')}" target="_blank"><button class="small green">WhatsApp</button></a><button class="small red" onclick="delOne(${realIndex})">Delete</button></td></tr>`; }); document.getElementById('list').innerHTML=html; document.getElementById('empty').style.display=filtered.length?'none':'block'; }
-function setStatus(i,s){ let d=getData(); d[i].status=s; saveData(d); let guests=JSON.parse(localStorage.getItem('clitch_guests')||'[]'); let g=guests.find(x=>x.phone===d[i].phone); if(g) g.status=s; localStorage.setItem('clitch_guests', JSON.stringify(guests)); loadBookings(); }
-function delOne(i){ let d=getData(); d.splice(i,1); saveData(d); loadBookings(); }
-function clearAll(){ if(confirm('Delete ALL bookings?')){ localStorage.removeItem('clitch_bookings'); loadBookings(); } }
+function calcTotal(b){ if(b.total && b.pricePerNight) return b.total; let s=getSettings(); let p=350; for(let k in s.prices){ if(b.room.includes(k)) p=s.prices[k]; } return calcNights(b)*p; }
+
+function loadBookings(){
+  let data=getData();
+  let q=document.getElementById('search').value.toLowerCase();
+  let fr=document.getElementById('filterRoom').value;
+  let fs=document.getElementById('filterStatus').value;
+  let filtered=data.filter(b=>(!q||b.name.toLowerCase().includes(q)||b.phone.includes(q))&&(!fr||b.room.includes(fr))&&(!fs||(b.status||'Pending')===fs));
+
+  // STATS - BOTH CAN SEE
+  document.getElementById('total').innerText=data.length;
+  document.getElementById('today').innerText=data.filter(b=>b.created.includes(new Date().toLocaleDateString())).length;
+  document.getElementById('pending').innerText=data.filter(b=>(b.status||'Pending')==='Pending').length;
+  document.getElementById('confirmed').innerText=data.filter(b=>b.status==='Confirmed').length;
+
+  // MONEY GAINED = ONLY CONFIRMED
+  let gained = data.filter(b=>b.status==='Confirmed').reduce((sum,b)=>sum+calcTotal(b),0);
+  document.getElementById('gained').innerText='GH₵ '+gained.toLocaleString();
+
+  // EXPECTED = ALL EXCEPT CANCELLED
+  let rev = data.filter(b=>b.status!=='Cancelled').reduce((sum,b)=>sum+calcTotal(b),0);
+  document.getElementById('revenue').innerText='GH₵ '+rev.toLocaleString();
+
+  let html='';
+  filtered.forEach((b)=>{
+    let realIndex=data.indexOf(b); let st=b.status||'Pending'; let n=calcNights(b); let t=calcTotal(b);
+    let deleteBtn = currentRole==='manager' ? `<button class="small red" onclick="delOne(${realIndex})">Delete</button>` : ``;
+    html+=`<tr><td>${b.created}</td><td>${b.name}</td><td>${b.phone}</td><td>${b.room}</td><td>${b.checkin}</td><td>${b.checkout}</td><td><b>${n} nights</b></td><td><b>GH₵ ${t.toLocaleString()}</b></td><td><span class="badge ${st}">${st}</span></td><td><button class="small green" onclick="setStatus(${realIndex},'Confirmed')">✓ Confirm</button><button class="small red" onclick="setStatus(${realIndex},'Cancelled')">Cancel</button><a href="https://wa.me/${b.phone.replace(/[^0-9]/g,'')}" target="_blank"><button class="small green">WhatsApp</button></a>${deleteBtn}</td></tr>`;
+  });
+  document.getElementById('list').innerHTML=html;
+  document.getElementById('empty').style.display=filtered.length?'none':'block';
+}
+
+function setStatus(i,s){
+  // Both Manager & Receptionist can Confirm / Cancel
+  let d=getData(); d[i].status=s; saveData(d);
+  let guests=JSON.parse(localStorage.getItem('clitch_guests')||'[]');
+  let g=guests.find(x=>x.phone===d[i].phone); if(g) g.status=s;
+  localStorage.setItem('clitch_guests', JSON.stringify(guests));
+  loadBookings();
+}
+function delOne(i){
+  if(currentRole!=='manager'){ alert('Only Manager can delete!'); return; }
+  let d=getData(); d.splice(i,1); saveData(d); loadBookings();
+}
+function clearAll(){
+  if(currentRole!=='manager'){ alert('Only Manager can clear all!'); return; }
+  if(confirm('Delete ALL bookings?')){ localStorage.removeItem('clitch_bookings'); loadBookings(); }
+}
 </script>
 </body>
 </html>
